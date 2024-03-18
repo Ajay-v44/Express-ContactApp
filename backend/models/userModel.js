@@ -12,11 +12,11 @@ const userschema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Please add the  passwprd"],
+      required: [true, "Please add the  password"],
     },
   },
   {
     timeStamps: true,
   }
 );
-module.exports = mongoose.model("users", userschema);
+module.exports = mongoose.model("user", userschema);

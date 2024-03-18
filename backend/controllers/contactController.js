@@ -1,6 +1,6 @@
 const contact = require("../models/contactModel");
 const getContacts = async (req, res) => {
-  const contacts = await contact.find();
+  const contacts = await contact.find({ user_id: req.user.id });
   res.status(200).json({ message: "get all contacts", data: contacts });
 };
 const createContact = async (req, res) => {
@@ -12,6 +12,7 @@ const createContact = async (req, res) => {
     });
   }
   const quey = await contact.create({
+    user_id:req.user.id,
     name,
     email,
     phone,
@@ -50,7 +51,7 @@ const deleteContact = async (req, res) => {
     if (!query) {
       return res.status(400).json({ message: "Cant Find" });
     }
-    await query.deleteOne({_id:req.params.id});
+    await query.deleteOne({ _id: req.params.id });
     return res
       .status(200)
       .json({ message: `delete contact of ${req.params.id}`, data: query });
