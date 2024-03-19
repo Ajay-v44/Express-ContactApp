@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
     } else {
       const userAvailable = await User.findOne({ email });
       if (userAvailable) {
-        res.status(400).json({
+        res.status(200).json({
           message: "User is already available",
         });
       } else {
