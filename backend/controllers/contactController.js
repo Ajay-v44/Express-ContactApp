@@ -5,14 +5,13 @@ const getContacts = async (req, res) => {
 };
 const createContact = async (req, res) => {
   const { name, email, phone } = req.body;
-
   if (!name || !email || !phone) {
     res.status(400).json({
       message: "allfields are mandratory",
     });
   }
   const quey = await contact.create({
-    user_id:req.user.id,
+    user_id: req.user.id,
     name,
     email,
     phone,
