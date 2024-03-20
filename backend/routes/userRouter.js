@@ -63,6 +63,10 @@ router.post("/login", async (req, res) => {
           message: "Sccessfully logedin",
           token: accesstoken,
         });
+      } else {
+        res.status(202).json({
+          message: "Invalid Credentials",
+        });
       }
     }
   } catch (err) {
@@ -73,9 +77,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/current",validationToken, (req, res) => {
-  res.json({ message: "curent  user",
-data:req.user });
+router.get("/current", validationToken, (req, res) => {
+  res.json({ message: "curent  user", data: req.user });
 });
 
 module.exports = router;

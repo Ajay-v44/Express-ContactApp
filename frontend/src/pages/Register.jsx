@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate=useNavigate()
   const [values, Setvalues] = useState({
     username: "",
     email: "",
@@ -37,6 +39,7 @@ const Register = () => {
       );
       setLoading(false);
       if (response.status === 201) {
+        navigate('/login')
         toast.success(response.data.message);
       } else if (response.status === 200) {
         toast.warning(response.data.message);
