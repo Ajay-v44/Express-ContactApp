@@ -1,6 +1,39 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { logout } from "../slice/TokenSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Footer = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.token);
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      if (token) {
+        const decodedToken = decodeToken(token); // Use the correct function name
+        const currentTime = Date.now() / 1000; // Current time in seconds
+        if (decodedToken.exp < currentTime) {
+          // Token has expired, log the user out
+          dispatch(logout(null));
+          navigate('/login');
+          toast.warning('token expired');
+          document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+          // Redirect to logout page or perform other logout actions
+        }
+      }
+    };
+
+    // Check token expiration every minute
+    const interval = setInterval(checkTokenExpiration, 60000);
+
+    return () => {
+      clearInterval(interval); // Cleanup interval on component unmount
+    };
+  }, [token, dispatch, navigate]);
+
   return (
     <>
       <footer className="bg-white dark:bg-gray-900">

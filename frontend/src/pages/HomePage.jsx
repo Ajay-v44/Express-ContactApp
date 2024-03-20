@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-    const [values,Setvalues]=useState([])
+  const navigate = useNavigate();
+  const [values, Setvalues] = useState([]);
+  const token = useSelector((state) => state.token);
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, useSelector]);
   return (
     <div className="mt-20">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

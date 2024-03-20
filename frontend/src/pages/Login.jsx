@@ -3,8 +3,11 @@ import React, { useState } from "react";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { addToken } from "../slice/TokenSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
@@ -19,9 +22,19 @@ const Login = () => {
       });
       setLoading(false);
       if (response.status === 200) {
-        navigate('/')
+        navigate("/");
         toast.success(response.data.message);
-       localStorage.setItem('token',response.data.token)
+        document.cookie = `jwtToken=${response.data.token}; path=/;`;
+        const cookieString = document.cookie;
+        if (cookieString && cookieString.includes("jwtToken=")) {
+          const cookieToken = cookieString
+            .split("; ")
+            .find((row) => row.startsWith("jwtToken="))
+            .split("=")[1];
+          if (cookieToken) {
+            dispatch(addToken(cookieToken));
+          }
+        }
       } else {
         toast.warning(response.data.message);
       }
