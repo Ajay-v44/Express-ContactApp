@@ -132,12 +132,12 @@ const HomePage = () => {
                         <td className="px-6 py-4">{value.email}</td>
                         <td className="px-6 py-4">{value.phone}</td>
                         <td className="px-6 py-4">
-                          <a
-                            href="#"
+                          <Link
+                          to={`/update/${value._id}`}
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           >
                             Edit
-                          </a>
+                          </Link>
                         </td>
                         <td className="px-6 py-4">Delete</td>
                       </tr>

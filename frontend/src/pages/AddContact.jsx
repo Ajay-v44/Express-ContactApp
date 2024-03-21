@@ -1,15 +1,48 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AddContact = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const cookieString = document.cookie;
+  if (cookieString && cookieString.includes("jwtToken=")) {
+    var cookieToken = cookieString
+      .split("; ")
+      .find((row) => row.startsWith("jwtToken="))
+      .split("=")[1];
+  }
   const [values, setvalues] = useState({
     name: "",
     email: "",
     phone: "",
   });
+  useEffect(() => {
+    const getSingleContact = async () => {
+      try {
+        if (id) {
+          const response = await axios.get(`/api/contact/${id}`, {
+            headers: {
+              Authorization: `Bearer ${cookieToken}`,
+            },
+          });
+          console.log(response);
+          if (response.status === 200) {
+            setvalues({
+              name: response.data.data.name,
+              email: response.data.data.email,
+              phone: response.data.data.phone,
+            });
+          }
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error("Something went wrong");
+      }
+    };
+    getSingleContact();
+  }, [id]);
   const handleOnChange = async (e) => {
     let name = e.target.name;
     let value = e.target.value;
@@ -22,15 +55,10 @@ const AddContact = () => {
   const handleOnSubmit = async (e) => {
     try {
       e.preventDefault();
-      const cookieString = document.cookie;
-      if (cookieString && cookieString.includes("jwtToken=")) {
-        var cookieToken = cookieString
-          .split("; ")
-          .find((row) => row.startsWith("jwtToken="))
-          .split("=")[1];
-      }
-      const response =await axios.post(
-        "/api/contact",
+      const method = id ? axios.put : axios.post;
+      const url = id ? `/api/contact/${id}` : "/api/contact";
+      const response = await method(
+        url,
         {
           name: values.name,
           email: values.email,
@@ -42,9 +70,10 @@ const AddContact = () => {
           },
         }
       );
-      if (response.status === 201) {
+      console.log(response);
+      if (response.status === 201 || response.status === 200) {
         navigate("/");
-        toast.success((await response).data.message);
+        toast.success(response.data.message);
       }
     } catch (err) {
       console.log(err);

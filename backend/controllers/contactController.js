@@ -42,7 +42,7 @@ const updateContact = async (req, res) => {
   });
   res
     .status(200)
-    .json({ message: `update contact of ${req.params.id}`, data: query });
+    .json({ message: `updated Contact of ${req.body.name}`, data: query });
 };
 const deleteContact = async (req, res) => {
   try {
