@@ -12,7 +12,7 @@ const Footer = () => {
   useEffect(() => {
     const checkTokenExpiration = () => {
       if (token) {
-        const decodedToken = decodeToken(token); // Use the correct function name
+        const decodedToken = jwtDecode(token); // Use the correct function name
         const currentTime = Date.now() / 1000; // Current time in seconds
         if (decodedToken.exp < currentTime) {
           // Token has expired, log the user out

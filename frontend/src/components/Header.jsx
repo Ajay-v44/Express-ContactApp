@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../slice/TokenSlice";
+import { addToken, logout } from "../slice/TokenSlice";
+import { toast } from "react-toastify";
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
   const [token, Settoken] = useState(false);
+
   useEffect(() => {
     const getToken = () => {
       const cookieString = document.cookie;
@@ -15,12 +17,13 @@ const Header = () => {
           .find((row) => row.startsWith("jwtToken="))
           .split("=")[1];
         if (cookieToken) {
+          dispatch(addToken(cookieToken))
           Settoken(true);
         }
       }
     };
     getToken();
-  }, [useSelector((state) => state.token)]);
+  }, [useSelector((state) => state.token),dispatch]);
   const handleLogout = () => {
     navigate("/login");
     document.cookie =

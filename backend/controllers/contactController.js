@@ -17,7 +17,7 @@ const createContact = async (req, res) => {
     phone,
   });
   res.status(201).json({
-    message: "create contacts",
+    message: "created contact",
     data: quey,
   });
 };
