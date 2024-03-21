@@ -53,7 +53,7 @@ const deleteContact = async (req, res) => {
     await query.deleteOne({ _id: req.params.id });
     return res
       .status(200)
-      .json({ message: `delete contact of ${req.params.id}`, data: query });
+      .json({ message: `contact deleted`, data: query });
   } catch (err) {
     res.status(400).json({ message: "Cant Find" });
     console.log(err);
