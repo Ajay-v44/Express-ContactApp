@@ -5,7 +5,6 @@ const validationToken = asyncHandler(async (req, res, next) => {
   let authHeader = req.header.Authorization || req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
     token = authHeader.split(" ")[1];
-    console.log("token",token)
     if (!token) {
         res.status(401).json({
           message: "Not Authorized OR Token is missing",
