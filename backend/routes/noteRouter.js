@@ -26,5 +26,51 @@ router.post("/", validationToken, async (req, res) => {
     });
   }
 });
+router.get("/", validationToken, async (req, res) => {
+  try {
+    const response = await NotesModel.find( {user_id: req.user.id} );
+    res.status(200).json({
+      data: response,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: "Error Occured",
+    });
+  }
+});
+router.patch("/:id", validationToken, async (req, res) => {
+  try {
+    const response = await NotesModel.findById(req.params.id);
+    if (!response) {
+      res.status(400).json({
+        message: "Cant find",
+      });
+    }
+    const data = await NotesModel.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).json({
+      message: "Updated succesfully",
+      data: data,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: String(err),
+    });
+  }
+});
 
+router.delete("/:id", validationToken, async (req, res) => {
+  try {
+    const response = await NotesModel.deleteOne({_id:req.params.id});
+    res.status(200).json({
+      message: `deleted note of  ${req.params.id}`,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: "Error Occured",
+    });
+  }
+});
 module.exports = router;
